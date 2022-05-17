@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class BookService {
 
@@ -17,6 +19,9 @@ public class BookService {
     }
 
     public Book getBook(int id){
+        Optional<Book> storedBook = bookRepository.findById(id);
+
+
         return bookRepository.findById(id).orElse(null);
     }
 
