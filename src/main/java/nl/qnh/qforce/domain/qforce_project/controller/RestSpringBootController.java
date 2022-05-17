@@ -24,13 +24,13 @@ public class RestSpringBootController {
         return result;
     }
 
-    @GetMapping(value = "/people")
-    public List<Object> getPeople(){
-        String url = "https://swapi.dev/api/people/";
+    @GetMapping(value = "/countries")
+    public List<Object> getCountries(){
+        String url = "https://restcountries.eu/rest/v2/all";
         RestTemplate restTemplate = new RestTemplate();
 
-        Object[] people = restTemplate.getForObject(url, Object[].class);
+        Object[] countries = restTemplate.getForObject(url, Object[].class);
 
-        return Arrays.asList(people);
+        return Arrays.asList(countries);
     }
 }
