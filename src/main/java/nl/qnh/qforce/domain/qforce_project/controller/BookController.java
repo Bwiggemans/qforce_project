@@ -1,7 +1,7 @@
 package nl.qnh.qforce.domain.qforce_project.controller;
 
 import nl.qnh.qforce.domain.qforce_project.model.Book;
-import nl.qnh.qforce.domain.qforce_project.repository.BookRepository;
+import nl.qnh.qforce.domain.qforce_project.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,28 +16,27 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookRepository bookRepository;
+    private BookService bookService;
 
     @GetMapping(value = "/books")
     public ResponseEntity<Object> getBooks() {
-        return ResponseEntity.ok(bookRepository.findAll());   // Jackson  object => json
+        return ResponseEntity.ok(bookService.getBooks());   // Jackson  object => json
     }
 
     @GetMapping(value = "/books/{id}")
     public ResponseEntity<Object> getBook(@PathVariable int id) {
-        return ResponseEntity.ok(bookRepository.findById(id));
+        return ResponseEntity.ok(bookService.getBook(id));
     }
 
     @DeleteMapping(value = "/books/{id}")
     public ResponseEntity<Object> deleteBook(@PathVariable("id") int id) {
-        bookRepository.deleteById(id);
+        bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/books")
     public ResponseEntity<Object> addBook(@RequestBody Book book) {
-        Book newBook = bookRepository.save(book);
-        int newId = newBook.getId();
+        int newId = bookService.addBook(book);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newId).toUri();
@@ -47,36 +46,14 @@ public class BookController {
 
     @PutMapping(value = "/books/{id}")
     public ResponseEntity<Object> updateBook(@PathVariable int id, @RequestBody Book book) {
-        Book existingBook = bookRepository.findById(id).orElse(null);
-
-        if (!book.getTitle().isEmpty()) {
-            existingBook.setTitle(book.getTitle());
-        }
-        if (!book.getAuthor().isEmpty()) {
-            existingBook.setAuthor(book.getAuthor());
-        }
-        if (!book.getIsbn().isEmpty()) {
-            existingBook.setIsbn(book.getIsbn());
-        }
-        bookRepository.save(existingBook);
+        bookService.updateBook(id, book);
 
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(value = "/books/{id}")
     public ResponseEntity<Object> partialUpdateBook(@PathVariable int id, @RequestBody Book book) {
-        Book existingBook = bookRepository.findById(id).orElse(null);
-
-        if (!(book.getTitle() == null) && !book.getTitle().isEmpty()) {
-            existingBook.setTitle(book.getTitle());
-        }
-        if (!(book.getAuthor() == null) &&!book.getAuthor().isEmpty()) {
-            existingBook.setAuthor(book.getAuthor());
-        }
-        if (!(book.getIsbn() == null) &&!book.getIsbn().isEmpty()) {
-            existingBook.setIsbn(book.getIsbn());
-        }
-        bookRepository.save(existingBook);
+        bookService.partialUpdateBook(id, book);
 
         return ResponseEntity.noContent().build();
     }
