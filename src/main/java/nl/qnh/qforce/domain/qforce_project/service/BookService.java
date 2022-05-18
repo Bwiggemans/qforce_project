@@ -1,9 +1,9 @@
 package nl.qnh.qforce.domain.qforce_project.service;
 
+import nl.qnh.qforce.domain.qforce_project.exception.RecordNotFoundException;
 import nl.qnh.qforce.domain.qforce_project.model.Book;
 import nl.qnh.qforce.domain.qforce_project.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,10 +19,15 @@ public class BookService {
     }
 
     public Book getBook(int id){
-        Optional<Book> storedBook = bookRepository.findById(id);
+        Optional<Book> optionalBook = bookRepository.findById(id);
 
+        if (optionalBook.isPresent()){
+            return optionalBook.get();
+        }
+        else{
+            throw new RecordNotFoundException("ID does not exist");
+        }
 
-        return bookRepository.findById(id).orElse(null);
     }
 
     public void deleteBook(int id){
