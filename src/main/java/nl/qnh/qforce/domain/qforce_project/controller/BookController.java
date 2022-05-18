@@ -19,8 +19,8 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping(value = "/books")
-    public ResponseEntity<Object> getBooks() {
-        return ResponseEntity.ok(bookService.getBooks());   // Jackson  object => json
+    public ResponseEntity<Object> getBooks(@RequestParam(name="title", defaultValue="") String title) {
+        return ResponseEntity.ok(bookService.getBooks(title));   // Jackson  object => json
     }
 
     @GetMapping(value = "/books/{id}")
