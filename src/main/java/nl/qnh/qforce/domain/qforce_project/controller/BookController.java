@@ -28,12 +28,6 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBook(id));
     }
 
-    @DeleteMapping(value = "/books/{id}")
-    public ResponseEntity<Object> deleteBook(@PathVariable("id") int id) {
-        bookService.deleteBook(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @PostMapping(value = "/books")
     public ResponseEntity<Object> addBook(@RequestBody Book book) {
         int newId = bookService.addBook(book);
@@ -42,20 +36,6 @@ public class BookController {
                 .buildAndExpand(newId).toUri();
 
         return ResponseEntity.created(location).build();
-    }
-
-    @PutMapping(value = "/books/{id}")
-    public ResponseEntity<Object> updateBook(@PathVariable int id, @RequestBody Book book) {
-        bookService.updateBook(id, book);
-
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping(value = "/books/{id}")
-    public ResponseEntity<Object> partialUpdateBook(@PathVariable int id, @RequestBody Book book) {
-        bookService.partialUpdateBook(id, book);
-
-        return ResponseEntity.noContent().build();
     }
 
 }
